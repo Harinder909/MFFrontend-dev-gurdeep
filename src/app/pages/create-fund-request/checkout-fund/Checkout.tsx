@@ -69,7 +69,6 @@ const Checkout: FC = () => {
   const [currentMF, setCurrentMF] = useState(MFdata[Number(id) - 1])
   const brokerage = 0.5
 
-  const ifMandate = useField('accountNum').values.length
   const [invAmount, setInvAmount] = useState(0)
 
   const getLatestData = async () => {
@@ -102,6 +101,7 @@ const Checkout: FC = () => {
 
     setCurrentSchema(createAccountSchemas[stepper.current.currentStepIndex - 1])
   }
+ // const ifMandate =  useField('accountNum').values?.length ;
 
   const submitStep = (values: ICreateAccount, actions: FormikValues) => {
     if (!stepper.current) {
@@ -114,13 +114,15 @@ const Checkout: FC = () => {
       values.brokerage = values.payableAmount - values.investmentAmount
     }
 
-    ifMandate > 0 && (values.mandate = 'false')
 
-    if (values.mandate === 'true') {
-      // banking info here
-      values.accountNum = 123456
-      values.ifsc = 'abc'
-    }
+
+    // ifMandate > 0 && (values.mandate = 'false')
+
+    // if (values.mandate === 'true') {
+    //   // banking info here
+    //   values.accountNum = 123456
+    //   values.ifsc = 'abc'
+    // }
 
     scrollToElement()
     if (!stepper.current) {

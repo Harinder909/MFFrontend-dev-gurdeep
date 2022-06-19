@@ -20,29 +20,29 @@ const usersColumns: ReadonlyArray<Column<User>> = [
     Cell: ({...props}) => <UserInfoCell user={props.data[props.row.index]} />,
   },
   {
-    Header: (props) => <UserCustomHeader tableProps={props} title='Investor' className='min-w-125px' />,
-    accessor: 'investor',
+    Header: (props) => <UserCustomHeader tableProps={props} title='Applicant Tax Status' className='min-w-125px' />,
+    accessor: 'applicantTaxStatus',
     Cell: ({...props}) => <UserInfoCell user={props.data[props.row.index]} />,
   },
   {
-    Header: (props) => <UserCustomHeader tableProps={props} title='UCC' className='min-w-125px' />,
-    accessor: 'ucc',
+    Header: (props) => <UserCustomHeader tableProps={props} title='Date of Birth' className='min-w-125px' />,
+    accessor: 'dateofBirth',
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='ISIN' className='min-w-125px' />
+      <UserCustomHeader tableProps={props} title='Mobile No' className='min-w-125px' />
     ),
-    id: 'isin',
+    id: 'mobileNo',
     Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].last_login} />,
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Folio No ' className='min-w-125px' />
+      <UserCustomHeader tableProps={props} title='Email ' className='min-w-125px' />
     ),
-    id: 'folioNo ',
+    id: 'email ',
     Cell: ({...props}) => <UserTwoStepsCell two_steps={props.data[props.row.index].two_steps} />,
   },
-  {
+  /*{
     Header: (props) => (
       <UserCustomHeader tableProps={props} title='Date' className='min-w-125px' />
     ),
@@ -139,7 +139,7 @@ const usersColumns: ReadonlyArray<Column<User>> = [
     ),
     id: 'actions',
     Cell: ({...props}) => <UserActionsCell id={props.data[props.row.index].id} />,
-  },
+  },*/
 ]
 
 export {usersColumns}

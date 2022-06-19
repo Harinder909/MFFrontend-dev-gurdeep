@@ -4,8 +4,8 @@ import {UsersListWrapper} from './users-list/UsersList'
 
 const usersBreadcrumbs: Array<PageLink> = [
   {
-    title: 'User Management',
-    path: '/user-management/users',
+    title: 'Users',
+    path: '/users-list/users',
     isSeparator: false,
     isActive: false,
   },
@@ -31,7 +31,7 @@ const UsersPage = () => {
           }
         />
       </Route>
-      <Route index element={<Navigate to='/user-management/users' />} />
+      <Route index element={<Navigate to='/users-list/users' />} />
     </Routes>
   )
 }
