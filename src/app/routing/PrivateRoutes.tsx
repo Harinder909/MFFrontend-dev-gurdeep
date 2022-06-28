@@ -28,7 +28,7 @@ const PrivateRoutes = () => {
   const WidgetsPage = lazy(() => import('../modules/widgets/WidgetsPage'))
   const ChatPage = lazy(() => import('../modules/apps/chat/ChatPage'))
   const UsersPage = lazy(() => import('../modules/apps/user-management/UsersPage'))
-  const UsersList = lazy(() => import('../modules/apps/users-list/UsersPage'))
+  const Users = lazy(() => import('../modules/apps/users/UsersPage'))
   const Exchanges = lazy(() => import('../modules/apps/exchanges/ExchangePage'))
   const ExchangeType = lazy(() => import('../modules/apps/exchanges-types/ExchangeTypePage'))
   const ExchangeSubType = lazy(
@@ -147,10 +147,10 @@ const PrivateRoutes = () => {
           }
         />
         <Route
-          path='users-list/*'
+          path='users/*'
           element={
             <SuspensedView>
-              <UsersList />
+              <Users />
             </SuspensedView>
           }
         />

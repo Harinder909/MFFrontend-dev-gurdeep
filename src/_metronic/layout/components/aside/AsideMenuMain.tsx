@@ -74,11 +74,17 @@ export function AsideMenuMain() {
             fontIcon='bi-layers'
           />
           <AsideMenuItem
-            to='/user-management/users'
+            to='/users/users'
+            icon='/media/icons/duotune/general/gen051.svg'
+            title='Customer List'
+            fontIcon='bi-layers'
+          />
+         {/*<AsideMenuItem
+            to='/users/users'
             icon='/media/icons/duotune/general/gen051.svg'
             title='Activity Ledger'
             fontIcon='bi-layers'
-          />
+      />*/}
           <div className='menu-item'>
             <div className='menu-content'>
               <div className='separator mx-1 my-4'></div>

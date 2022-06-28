@@ -155,9 +155,9 @@ const UserEditModalForm: FC<Props> = ({user, isUserLoading}) => {
             {/* begin::Input */}
             <input
               placeholder='Full name'
-              {...formik.getFieldProps('name')}
+              {...formik.getFieldProps('ucc')}
               type='text'
-              name='name'
+              name='ucc'
               className={clsx(
                 'form-control form-control-solid mb-3 mb-lg-0',
                 {'is-invalid': formik.touched.ucc && formik.errors.ucc},

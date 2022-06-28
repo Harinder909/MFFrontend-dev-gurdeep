@@ -5,6 +5,7 @@ import {getAuth} from '../../../../auth/core/AuthHelpers'
 const auth = getAuth()
 const API_URL = process.env.REACT_APP_API_URL
 //const INVESTMENT_URL = `${API_URL}/admin/exchange_types`
+//const GET_USERS_LIST_URL = `${API_URL}/admin/users_list`
 const GET_INVESTMENT_URL = `${API_URL}/customer/get_investments`
 const GET_SINGLE_INVESTMENT_URL = `${API_URL}/customer/get_investment`
 const UPDATE_INVESTMENT = `${API_URL}/customer/update_investment`
@@ -14,11 +15,12 @@ const config = {
     'x-access-token': auth ? auth.data.token : '',
   },
 }
+
 const getInvestments = (query: string): Promise<UsersQueryResponse> => {
   return axios
     .get(`${GET_INVESTMENT_URL}?${query}`, config)
     .then((d: AxiosResponse<UsersQueryResponse>) => d.data)
-}
+} 
 //const API_URL = process.env.REACT_APP_THEME_API_URL
 const USER_URL = `${API_URL}/user`
 const GET_USERS_URL = `${API_URL}/users/query`
@@ -61,7 +63,7 @@ const deleteSelectedUsers = (userIds: Array<ID>): Promise<void> => {
 }
 
 export {
-  getInvestments,
+  //getInvestments,
   getUsers,
   deleteUser,
   deleteSelectedUsers,

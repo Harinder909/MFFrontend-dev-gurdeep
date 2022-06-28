@@ -1,15 +1,17 @@
 import {ID, Response} from '../../../../../../_metronic/helpers'
 export type User = {
   id?: ID
-  applicantTaxStatus?: string
-  dateofBirth?: string
-  mobileNo?: string
-  email?: string
-  /*date?: string
+  investor?: string
+  ucc?: string
+  isin?: string
+  folioNo?: string
+  date?: string
   subType?: string
   amount?: string
   divReinv?: string
   nav?: string
+  applicantTaxStatus?: string
+  dateofBirth?: string
 
   noofunit?: string
   navDate?: string
@@ -26,21 +28,23 @@ export type User = {
   initials?: {
     label: string
     state: string
-  }*/
+  }
 }
 
 export type UsersQueryResponse = Response<Array<User>>
 
 export const initialUser: User = {
-  applicantTaxStatus: 'avatars/300-6.jpg',
-  dateofBirth: 'Art Director',  
-  mobileNo: '',
-  email: '',
- /* subType: '',
+  investor: 'avatars/300-6.jpg',
+  ucc: 'Art Director',
+  isin: 'Administrator',
+  folioNo: '',
+  date: '',
+  subType: '',
   amount: '',
   divReinv: '',
   nav: '',
-
+  applicantTaxStatus: '',
+  dateofBirth: '',
   noofunit:'',
   navDate: '',
   trnDays:'',
@@ -51,5 +55,5 @@ export const initialUser: User = {
   divP:'',
   total:'',
   annualizedReturn:'',
-  absReturn :'',*/
+  absReturn :'',
 }
