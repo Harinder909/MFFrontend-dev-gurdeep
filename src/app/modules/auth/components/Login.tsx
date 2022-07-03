@@ -9,20 +9,19 @@ import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {useAuth} from '../core/Auth'
 
 const loginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Wrong email format')
+  ucc: Yup.string()
+    .min(5, 'Minimum 5 symbols')
+    .max(10, 'Maximum 10 symbols')
+    .required('UCC is required'),
+  otp: Yup.string()
     .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Email is required'),
-  password: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Password is required'),
+    .max(10, 'Maximum 10 symbols')
+    .required('OTP is required'),
 })
 
 const initialValues = {
-  email: 'admin@demo.com',
-  password: 'demo',
+  ucc: 'XY234',
+  otp: '12345',
 }
 
 /*
@@ -33,21 +32,27 @@ const initialValues = {
 
 export function Login() {
   const [loading, setLoading] = useState(false)
+  const [uccValid, setUccValid] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
 
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
+      if (!uccValid) {
+        setUccValid(true)
+        return
+      }
       setLoading(true)
       try {
-        const {data: auth} = await login(values.email, values.password)
+        const {data: auth} = await login(values.ucc, values.otp)
         if (auth.status === true) {
           saveAuth(auth)
           const data = await getUserByToken(auth)
           setCurrentUser(data)
         } else {
           saveAuth(undefined)
+          setUccValid(false)
           setStatus('The login detail is incorrect')
           setSubmitting(false)
           setLoading(false)
@@ -55,6 +60,7 @@ export function Login() {
       } catch (error) {
         console.error(error)
         saveAuth(undefined)
+        setUccValid(false)
         setStatus('The login detail is incorrect')
         setSubmitting(false)
         setLoading(false)
@@ -83,78 +89,77 @@ export function Login() {
         <></>
         /* <div className='mb-10 bg-light-info p-8 rounded'>
           <div className='text-info'>
-            Use account <strong>admin@demo.com</strong> and password <strong>demo</strong> to
+            Use account <strong>admin@demo.com</strong> and otp <strong>demo</strong> to
             continue.
           </div>
         </div>*/
       )}
 
-      {/* begin::Form group */}
-      <div className='fv-row mb-10'>
-        <label className='form-label fs-6 fw-bolder text-dark'>Email</label>
-        <input
-          placeholder='Email'
-          {...formik.getFieldProps('email')}
-          className={clsx(
-            'form-control form-control-lg form-control-solid',
-            {'is-invalid': formik.touched.email && formik.errors.email},
-            {
-              'is-valid': formik.touched.email && !formik.errors.email,
-            }
+      {!uccValid ? (
+        <div className='fv-row mb-10'>
+          <label className='form-label fs-6 fw-bolder text-dark'>UCC</label>
+          <input
+            placeholder='Enter your UCC'
+            {...formik.getFieldProps('ucc')}
+            className={clsx(
+              'form-control form-control-lg form-control-solid',
+              {'is-invalid': formik.touched.ucc && formik.errors.ucc},
+              {
+                'is-valid': formik.touched.ucc && !formik.errors.ucc,
+              }
+            )}
+            type='ucc'
+            name='ucc'
+            autoComplete='off'
+          />
+          {formik.touched.ucc && formik.errors.ucc && (
+            <div className='fv-plugins-message-container'>
+              <span role='alert'>{formik.errors.ucc}</span>
+            </div>
           )}
-          type='email'
-          name='email'
-          autoComplete='off'
-        />
-        {formik.touched.email && formik.errors.email && (
-          <div className='fv-plugins-message-container'>
-            <span role='alert'>{formik.errors.email}</span>
-          </div>
-        )}
-      </div>
-      {/* end::Form group */}
-
-      {/* begin::Form group */}
-      <div className='fv-row mb-10'>
-        <div className='d-flex justify-content-between mt-n5'>
-          <div className='d-flex flex-stack mb-2'>
-            {/* begin::Label */}
-            <label className='form-label fw-bolder text-dark fs-6 mb-0'>Password</label>
-            {/* end::Label */}
-            {/* begin::Link */}
-            <Link
-              to='/auth/forgot-password'
+        </div>
+      ) : (
+        <div className='fv-row mb-10'>
+          <div className='d-flex justify-content-between mt-n5'>
+            <div className='d-flex flex-stack mb-2'>
+              {/* begin::Label */}
+              <label className='form-label fw-bolder text-dark fs-6 mb-0'>OTP</label>
+              {/* end::Label */}
+              {/* begin::Link */}
+              {/* <Link
+              to='/auth/forgot-otp'
               className='link-primary fs-6 fw-bolder'
               style={{marginLeft: '5px'}}
             >
-              Forgot Password ?
-            </Link>
-            {/* end::Link */}
-          </div>
-        </div>
-        <input
-          type='password'
-          autoComplete='off'
-          {...formik.getFieldProps('password')}
-          className={clsx(
-            'form-control form-control-lg form-control-solid',
-            {
-              'is-invalid': formik.touched.password && formik.errors.password,
-            },
-            {
-              'is-valid': formik.touched.password && !formik.errors.password,
-            }
-          )}
-        />
-        {formik.touched.password && formik.errors.password && (
-          <div className='fv-plugins-message-container'>
-            <div className='fv-help-block'>
-              <span role='alert'>{formik.errors.password}</span>
+              Forgot OTP ?
+            </Link> */}
+              {/* end::Link */}
             </div>
           </div>
-        )}
-      </div>
-      {/* end::Form group */}
+          <input
+            placeholder='Enter the OTP'
+            type='text'
+            autoComplete='off'
+            {...formik.getFieldProps('otp')}
+            className={clsx(
+              'form-control form-control-lg form-control-solid',
+              {
+                'is-invalid': formik.touched.otp && formik.errors.otp,
+              },
+              {
+                'is-valid': formik.touched.otp && !formik.errors.otp,
+              }
+            )}
+          />
+          {formik.touched.otp && formik.errors.otp && (
+            <div className='fv-plugins-message-container'>
+              <div className='fv-help-block'>
+                <span role='alert'>{formik.errors.otp}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* begin::Action */}
       <div className='text-center'>
@@ -164,10 +169,14 @@ export function Login() {
           className='btn btn-lg btn-primary w-100 mb-5'
           disabled={formik.isSubmitting || !formik.isValid}
         >
-          {!loading && <span className='indicator-label'>Continue</span>}
+          {!loading && !uccValid ? (
+            <span className='indicator-label'>Continue</span>
+          ) : (
+            !loading && <span className='indicator-label'>Login</span>
+          )}
           {loading && (
             <span className='indicator-progress' style={{display: 'block'}}>
-              Please wait...
+              Please Wait...
               <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
             </span>
           )}
