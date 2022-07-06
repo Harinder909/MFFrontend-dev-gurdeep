@@ -4,7 +4,7 @@ import * as Yup from 'yup'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
-import {getUserByToken, login} from '../core/_requests'
+import {getUserByToken, login, loginotp} from '../core/_requests'
 import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {useAuth} from '../core/Auth'
 
@@ -21,7 +21,7 @@ const loginSchema = Yup.object().shape({
 
 const initialValues = {
   ucc: 'XY234',
-  otp: '12345',
+  otp: 'XXXX',
 }
 
 /*
@@ -41,7 +41,27 @@ export function Login() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       if (!uccValid) {
         setUccValid(true)
-        return
+        try {
+          const {data: auth} = await loginotp (values.ucc)
+          if (auth.status === true) {
+           // saveAuth(auth)
+           // const data = await getUserByToken(auth)
+           // setCurrentUser(data)
+          } else {
+            saveAuth(undefined)
+            setUccValid(false)
+            setStatus('The login detail is incorrect')
+            setSubmitting(false)
+            setLoading(false)
+          }
+        } catch (error) {
+          console.error(error)
+          saveAuth(undefined)
+          setUccValid(false)
+          setStatus('The login detail is incorrect')
+          setSubmitting(false)
+          setLoading(false)
+        }
       }
       setLoading(true)
       try {
@@ -65,6 +85,7 @@ export function Login() {
         setSubmitting(false)
         setLoading(false)
       }
+      
     },
   })
 

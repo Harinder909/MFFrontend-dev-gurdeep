@@ -13,6 +13,14 @@ const uuid = 'qwertyuiop'
 const fcmToken = 'hgjgjjhgjg'
 const device = 'web'
 // Server should return AuthModel
+export function loginotp(ucc: string) {
+  return axios.post<AuthModel>(LOGIN_OTP, {
+    ucc,
+    uuid,
+    fcmToken,
+    device,
+  })
+}
 export function login(email: string, password: string) {
   return axios.post<AuthModel>(LOGIN_URL, {
     email,
