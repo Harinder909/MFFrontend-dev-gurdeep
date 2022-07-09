@@ -43,14 +43,16 @@ export function Login() {
         setUccValid(true)
         try {
           const {data: auth} = await loginotp (values.ucc)
+          const fetchOrTimeout = Promise.race([{data: auth}, await(10 * 60 * 1000)]);
+          console.log(loginotp);
           if (auth.status === true) {
            // saveAuth(auth)
-           // const data = await getUserByToken(auth)
-           // setCurrentUser(data)
+          //  const data = await getUserByToken(auth)
+          //  setCurrentUser(data)
           } else {
             saveAuth(undefined)
             setUccValid(false)
-            setStatus('The login detail is incorrect')
+            setStatus('The login detail is incorrect 21')
             setSubmitting(false)
             setLoading(false)
           }
@@ -58,7 +60,7 @@ export function Login() {
           console.error(error)
           saveAuth(undefined)
           setUccValid(false)
-          setStatus('The login detail is incorrect')
+          setStatus('The login detail is incorrect 22')
           setSubmitting(false)
           setLoading(false)
         }
@@ -66,6 +68,7 @@ export function Login() {
       setLoading(true)
       try {
         const {data: auth} = await login(values.ucc, values.otp)
+        
         if (auth.status === true) {
           saveAuth(auth)
           const data = await getUserByToken(auth)
@@ -73,7 +76,7 @@ export function Login() {
         } else {
           saveAuth(undefined)
           setUccValid(false)
-          setStatus('The login detail is incorrect')
+          setStatus('The login detail is incorrect 23')
           setSubmitting(false)
           setLoading(false)
         }
@@ -81,7 +84,7 @@ export function Login() {
         console.error(error)
         saveAuth(undefined)
         setUccValid(false)
-        setStatus('The login detail is incorrect')
+        setStatus('The login detail is incorrect 24')
         setSubmitting(false)
         setLoading(false)
       }
