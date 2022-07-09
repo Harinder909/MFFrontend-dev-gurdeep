@@ -4,6 +4,7 @@ export interface AuthModel {
   otp: string
   data: {
     token: string
+    otp: string
     id: number
   }
 }
