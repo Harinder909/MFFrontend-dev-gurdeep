@@ -21,6 +21,16 @@ export function loginotp(ucc: string) {
     device,
   })
 }
+
+export function tokenlogin(token: string) {
+  return axios.post<AuthModel>(LOGIN_URL, {
+    token,
+    uuid,
+    fcmToken,
+    device,
+  })
+}
+
 export function login(email: string, password: string) {
   return axios.post<AuthModel>(LOGIN_URL, {
     email,

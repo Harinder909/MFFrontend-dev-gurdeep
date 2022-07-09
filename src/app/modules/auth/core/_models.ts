@@ -1,6 +1,7 @@
 export interface AuthModel {
   status: boolean
   refreshToken?: string
+  otp: string
   data: {
     token: string
     id: number

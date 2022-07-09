@@ -39,20 +39,25 @@ export function Login() {
     initialValues,
     validationSchema: loginSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
+      var userData: any = []
+      var otp = ''
       if (!uccValid) {
-        setUccValid(true)
         try {
-          const {data: auth} = await loginotp (values.ucc)
-          const fetchOrTimeout = Promise.race([{data: auth}, await(10 * 60 * 1000)]);
-          console.log(loginotp);
+          const {data: auth} = await loginotp(values.ucc)
           if (auth.status === true) {
-           // saveAuth(auth)
-          //  const data = await getUserByToken(auth)
-          //  setCurrentUser(data)
+            setLoading(true)
+            userData = await getUserByToken(auth)
+            otp = auth.otp
+            console.log(auth)
+            setUccValid(true)
+            setLoading(false)
+            // saveAuth(auth)
+            // const data = await getUserByToken(auth)
+            // setCurrentUser(data)
           } else {
             saveAuth(undefined)
             setUccValid(false)
-            setStatus('The login detail is incorrect 21')
+            setStatus('Please enter a valid UCC')
             setSubmitting(false)
             setLoading(false)
           }
@@ -60,35 +65,37 @@ export function Login() {
           console.error(error)
           saveAuth(undefined)
           setUccValid(false)
-          setStatus('The login detail is incorrect 22')
+          setStatus('Please enter a valid UCC')
           setSubmitting(false)
           setLoading(false)
         }
       }
-      setLoading(true)
-      try {
-        const {data: auth} = await login(values.ucc, values.otp)
-        
-        if (auth.status === true) {
-          saveAuth(auth)
-          const data = await getUserByToken(auth)
-          setCurrentUser(data)
-        } else {
+      // setLoading(true)
+      if (uccValid && values.otp != 'XXXX') {
+        try {
+          if (values.otp === otp) {
+            const {data: auth} = await login(userData.email, userData.password)
+            if (auth.status === true) {
+              saveAuth(auth)
+              const data = await getUserByToken(auth)
+              setCurrentUser(data)
+            } else {
+              saveAuth(undefined)
+              setUccValid(false)
+              setStatus('The login detail is incorrect')
+              setSubmitting(false)
+              setLoading(false)
+            }
+          }
+        } catch (error) {
+          console.error(error)
           saveAuth(undefined)
           setUccValid(false)
-          setStatus('The login detail is incorrect 23')
+          setStatus('The OTP is incorrect')
           setSubmitting(false)
           setLoading(false)
         }
-      } catch (error) {
-        console.error(error)
-        saveAuth(undefined)
-        setUccValid(false)
-        setStatus('The login detail is incorrect 24')
-        setSubmitting(false)
-        setLoading(false)
       }
-      
     },
   })
 
