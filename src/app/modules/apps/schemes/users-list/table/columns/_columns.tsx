@@ -17,31 +17,33 @@ const usersColumns: ReadonlyArray<Column<User>> = [
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='Scheme Name' className='min-w-125px' />,
     id: 'schemeName',
-    Cell: ({...props}) => <UserInfoCell user={props.data[props.row.index]} />,
+    Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].schemeName} />,
   },
   {
     Header: (props) => <UserCustomHeader tableProps={props} title='ISIN' className='min-w-125px' />,
-    accessor: 'role',
+    id: 'isin',
+    Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].isin} />,
   },
   {
     Header: (props) => (
-      <UserCustomHeader tableProps={props} title='Type' className='min-w-125px' />
+      <UserCustomHeader tableProps={props} title='price' className='min-w-125px' />
     ),
-    id: 'last_login',
-    Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].last_login} />,
+    id: 'price',
+    Cell: ({...props}) => <UserLastLoginCell last_login={props.data[props.row.index].price} />,
   },
   {
     Header: (props) => (
       <UserCustomHeader tableProps={props} title='Sub Type' className='min-w-125px' />
     ),
-    id: 'two_steps',
-    Cell: ({...props}) => <UserTwoStepsCell two_steps={props.data[props.row.index].two_steps} />,
+    id: 'subTypeId',
+    Cell: ({...props}) => <UserTwoStepsCell two_steps={props.data[props.row.index].subTypeId} />,
   },
   {
     Header: (props) => (
       <UserCustomHeader tableProps={props} title='AMC' className='min-w-125px' />
     ),
-    accessor: 'joined_day',
+    id: 'amcId',
+    Cell: ({...props}) => <UserTwoStepsCell two_steps={props.data[props.row.index].amcId} />,
   },
 
   {

@@ -10,18 +10,18 @@ import {useAuth} from '../core/Auth'
 
 const loginSchema = Yup.object().shape({
   ucc: Yup.string()
-    .min(5, 'Minimum 5 symbols')
+    .min(6, 'Minimum 5 symbols')
     .max(10, 'Maximum 10 symbols')
     .required('UCC is required'),
   otp: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(10, 'Maximum 10 symbols')
+    .min(4, 'Minimum 3 symbols')
+    .max(4, 'Maximum 10 symbols')
     .required('OTP is required'),
 })
 
 const initialValues = {
-  ucc: 'XY234',
-  otp: 'XXXX',
+  ucc: '',
+  otp: 'xxxx',
 }
 
 /*
@@ -33,6 +33,8 @@ const initialValues = {
 export function Login() {
   const [loading, setLoading] = useState(false)
   const [uccValid, setUccValid] = useState(false)
+  const [currentStep, setCurrentStep] = useState(1)
+  const [otpToken,setOtpToken] = useState('')
   const {saveAuth, setCurrentUser} = useAuth()
 
   const formik = useFormik({
@@ -41,23 +43,24 @@ export function Login() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       var userData: any = []
       var otp = ''
-      if (!uccValid) {
+      if(currentStep === 1){
         try {
-          const {data: auth} = await loginotp(values.ucc)
+          const {data: auth} = await loginotp (values.ucc)
+          const fetchOrTimeout = Promise.race([{data: auth}, await(10 * 60 * 1000)]);
+          console.log(auth)
           if (auth.status === true) {
-            setLoading(true)
-            userData = await getUserByToken(auth)
-            otp = auth.otp
-            console.log(auth)
             setUccValid(true)
-            setLoading(false)
-            // saveAuth(auth)
-            // const data = await getUserByToken(auth)
-            // setCurrentUser(data)
+            setCurrentStep(2)
+            setOtpToken(auth.data.token)
+           // saveAuth(auth)
+          //  const data = await getUserByToken(auth)
+          //  setCurrentUser(data)
+            setSubmitting(false)
+
           } else {
             saveAuth(undefined)
             setUccValid(false)
-            setStatus('Please enter a valid UCC')
+            setStatus('The ucc detail is incorrect')
             setSubmitting(false)
             setLoading(false)
           }
@@ -65,37 +68,35 @@ export function Login() {
           console.error(error)
           saveAuth(undefined)
           setUccValid(false)
-          setStatus('Please enter a valid UCC')
+          setStatus('The ucc detail is incorrect')
           setSubmitting(false)
           setLoading(false)
         }
-      }
-      // setLoading(true)
-      if (uccValid && values.otp != 'XXXX') {
-        try {
-          if (values.otp === otp) {
-            const {data: auth} = await login(userData.email, userData.password)
-            if (auth.status === true) {
-              saveAuth(auth)
-              const data = await getUserByToken(auth)
-              setCurrentUser(data)
-            } else {
-              saveAuth(undefined)
-              setUccValid(false)
-              setStatus('The login detail is incorrect')
-              setSubmitting(false)
-              setLoading(false)
-            }
-          }
-        } catch (error) {
-          console.error(error)
+    }else{
+      setLoading(true)
+      try {
+        const {data: auth} = await login(values.ucc, values.otp)
+        
+        if (auth.status === true) {
+          saveAuth(auth)
+          const data = await getUserByToken(auth)
+          setCurrentUser(data)
+        } else {
           saveAuth(undefined)
-          setUccValid(false)
-          setStatus('The OTP is incorrect')
+         // setUccValid(false)
+          setStatus('OTP is incorrect')
           setSubmitting(false)
           setLoading(false)
         }
+      } catch (error) {
+        console.error(error)
+        saveAuth(undefined)
+        setUccValid(false)
+        setStatus('OTP is incorrect')
+        setSubmitting(false)
+        setLoading(false)
       }
+    }
     },
   })
 
@@ -198,7 +199,8 @@ export function Login() {
           type='submit'
           id='kt_sign_in_submit'
           className='btn btn-lg btn-primary w-100 mb-5'
-          disabled={formik.isSubmitting || !formik.isValid}
+          
+          disabled={formik.isSubmitting}
         >
           {!loading && !uccValid ? (
             <span className='indicator-label'>Continue</span>
